@@ -27,7 +27,7 @@ type CancionEntryFormProps = {
 type CancionEntryFormPropsUpdate = ()=> {
   onCancionUpdated?: () => void;
 };
-
+//GUARDARTISTA
 function CancionEntryForm(props: CancionEntryFormProps) {
   const nombre = useSignal('');
   const genero = useSignal('');
@@ -66,14 +66,14 @@ function CancionEntryForm(props: CancionEntryFormProps) {
   let listaGenero = useSignal<String[]>([]);
   useEffect(() => {
     CancionService.listaAlbumGenero().then(data =>
-      
+      //console.log(data)
       listaGenero.value = data
     );
   }, []);
   let listaAlbum = useSignal<String[]>([]);
   useEffect(() => {
     CancionService.listaAlbumCombo().then(data =>
-    
+      //console.log(data)
       listaAlbum.value = data
     );
   }, []);
@@ -81,7 +81,7 @@ function CancionEntryForm(props: CancionEntryFormProps) {
   let listaTipo = useSignal<String[]>([]);
   useEffect(() => {
     CancionService.listTipo().then(data =>
-
+      //console.log(data)
       listaTipo.value = data
     );
   }, []);
@@ -102,7 +102,7 @@ function CancionEntryForm(props: CancionEntryFormProps) {
                 dialogOpened.value = false;
               }}
             >
-              Candelar
+              Cancelar
             </Button>
             <Button onClick={createCancion} theme="primary">
               Registrar
@@ -158,12 +158,13 @@ function CancionEntryForm(props: CancionEntryFormProps) {
               dialogOpened.value = true;
             }}
           >
-            Agregar
+            Añadir Cancion
           </Button>
     </>
   );
 }
 
+//GUARDARTISTA
 const CancionEntryFormUpdate = function(props: CancionEntryFormPropsUpdate){//useCallback((props: ArtistaEntryFormPropsUpdate,{ item: art }: { item: Artista }) => {
   const dialogOpened = useSignal(false);
 
@@ -227,7 +228,7 @@ const CancionEntryFormUpdate = function(props: CancionEntryFormPropsUpdate){//us
                 dialogOpened.value = false;
               }}
             >
-              Candelar
+              Cancelar
             </Button>
             <Button onClick={updateCancion} theme="primary">
               Registrar
@@ -236,7 +237,7 @@ const CancionEntryFormUpdate = function(props: CancionEntryFormPropsUpdate){//us
           </>
         }
       >
-        <VerticalLayout style={{ alignItems: 'stretch', width: '18rem', maxWidth: '100%' }}>
+        <VerticalLayout style={{ alignItems: 'stretch', width: '10rem', maxWidth: '100%' }}>
           <TextField label="Nombre de la Cancion"
             placeholder="Ingrese el nombre de la Cancion"
             aria-label="Nombre de la cancion"
@@ -293,11 +294,17 @@ const CancionEntryFormUpdate = function(props: CancionEntryFormPropsUpdate){//us
 };
 
 
+//LISTARTISTAS
 export default function CancionView() {
+
+//   const dataProvider = useDataProvider<Cancion>({
+//     list: () => CancionService.listCancion(),
+//   });
 
 const [items, setItems] = useState([]);
   useEffect(() => {
     CancionService.listCancion().then(function (data) {
+      //items.values = data;
       setItems(data);
     });
   }, []);
@@ -306,6 +313,7 @@ const [items, setItems] = useState([]);
 const order = (event, columnId) => {
     console.log(event);
     const direction = event.detail.value;
+    // Custom logic based on the sorting direction
     console.log(`Sort direction changed for column ${columnId} to ${direction}`);
 
     var dir = (direction == 'asc') ? 1 : 2;
@@ -314,6 +322,7 @@ const order = (event, columnId) => {
     });
   }
 
+  //BUSQUEDABINARIA
   const criterio = useSignal('');
   const texto = useSignal('');
   const itemSelect = [
@@ -401,49 +410,55 @@ const searchBynary = async () => {
     );
   }
 
+  function searchLineal(event: MouseEvent<Button, MouseEvent>): void {
+    throw new Error('Function not implemented.');
+  }
+
   return (
 
     <main className="w-full h-full flex flex-col box-border gap-s p-m">
 
-      <ViewToolbar title="Lista de Canciones">
-        <Group>
-          <CancionEntryForm onCancionCreated={items.refresh}/>
-        </Group>
-      </ViewToolbar>
+      <ViewToolbar title="Canciones" />
 
-      <HorizontalLayout theme="spacing">
-        <Select
-          items={itemSelect}
-          value={criterio.value}
-          onValueChanged={(evt) => (criterio.value = evt.detail.value)}
-          placeholder="Seleccione un criterio" />
-        <TextField
-          placeholder="Search"
-          style={{ width: '50%' }}
-          value={texto.value}
-          onValueChanged={(evt) => (texto.value = evt.detail.value)}
-        >
-          <Icon slot="prefix" icon="vaadin:search" />
-        </TextField>
-        {/* <Button onClick={searchLineal} theme="primary">
-          BUSCAR BL
-        </Button> */}
-        <Button onClick={search} theme="primary">
-          BUSCAR
-        </Button>
-      </HorizontalLayout>
+      <div style={{ display: 'flex', alignItems: 'center', marginBottom: '2rem', width: '100%' }}>
+        <div style={{ marginRight: '2rem' }}>
+          <CancionEntryForm onCancionCreated={items.refresh} />
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+          <Select
+            items={itemSelect}
+            value={criterio.value}
+            onValueChanged={evt => (criterio.value = evt.detail.value)}
+            placeholder="Seleccione el criterio"
+            style={{ minWidth: '220px', marginLeft: 0 }}
+          />
+          <TextField
+            placeholder="Texto a buscar"
+            style={{ width: '50%', minWidth: '250px', marginLeft: '1rem' }}
+            value={texto.value}
+            onValueChanged={evt => (texto.value = evt.detail.value)}
+          >
+            <Icon slot="prefix" icon="vaadin:search" />
+          </TextField>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginLeft: '2rem' }}>
+            <Button onClick={search} theme="primary">
+              Busqueda B
+            </Button>
+            <Button onClick={searchLineal} theme="primary">
+              Busqueda LB
+            </Button>
+          </div>
+        </div>
+      </div>
 
-  <Grid items={items}>
+      <Grid items={items}>
         <GridSortColumn path="nombre" header="Nombre" onDirectionChanged={(e) => order(e, "nombre")} />
         <GridSortColumn path="genero" header="Genero" onDirectionChanged={(e) => order(e, "genero")} />
-        <GridSortColumn path="album" header="Album" onDirectionChanged={(e) => order(e, "album")} ></GridSortColumn>
-        <GridSortColumn path="tipo" header="Tipo" onDirectionChanged={(e) => order(e, "tipo")}  />
-        <GridSortColumn path="duracion" header="Duracion" onDirectionChanged={(e) => order(e, "duracion")}  />
+        <GridSortColumn path="album" header="Album" onDirectionChanged={(e) => order(e, "album")} />
+        <GridSortColumn path="tipo" header="Tipo" onDirectionChanged={(e) => order(e, "tipo")} />
+        <GridSortColumn path="duracion" header="Duracion" onDirectionChanged={(e) => order(e, "duracion")} />
         <GridSortColumn path="url" header="URL" onDirectionChanged={(e) => order(e, "url")}  />
-
-
-
-        <GridColumn header="Acciones" renderer={indexLink}/>
+        <GridColumn header="Acciones" renderer={indexLink} />
       </Grid>
     </main>
   );
