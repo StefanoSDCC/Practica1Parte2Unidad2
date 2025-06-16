@@ -27,7 +27,7 @@ type CancionEntryFormProps = {
 type CancionEntryFormPropsUpdate = ()=> {
   onCancionUpdated?: () => void;
 };
-//GUARDARTISTA
+
 function CancionEntryForm(props: CancionEntryFormProps) {
   const nombre = useSignal('');
   const genero = useSignal('');
@@ -66,14 +66,14 @@ function CancionEntryForm(props: CancionEntryFormProps) {
   let listaGenero = useSignal<String[]>([]);
   useEffect(() => {
     CancionService.listaAlbumGenero().then(data =>
-      //console.log(data)
+      
       listaGenero.value = data
     );
   }, []);
   let listaAlbum = useSignal<String[]>([]);
   useEffect(() => {
     CancionService.listaAlbumCombo().then(data =>
-      //console.log(data)
+    
       listaAlbum.value = data
     );
   }, []);
@@ -81,7 +81,7 @@ function CancionEntryForm(props: CancionEntryFormProps) {
   let listaTipo = useSignal<String[]>([]);
   useEffect(() => {
     CancionService.listTipo().then(data =>
-      //console.log(data)
+
       listaTipo.value = data
     );
   }, []);
@@ -164,7 +164,6 @@ function CancionEntryForm(props: CancionEntryFormProps) {
   );
 }
 
-//GUARDARTISTA
 const CancionEntryFormUpdate = function(props: CancionEntryFormPropsUpdate){//useCallback((props: ArtistaEntryFormPropsUpdate,{ item: art }: { item: Artista }) => {
   const dialogOpened = useSignal(false);
 
@@ -294,17 +293,11 @@ const CancionEntryFormUpdate = function(props: CancionEntryFormPropsUpdate){//us
 };
 
 
-//LISTARTISTAS
 export default function CancionView() {
-
-//   const dataProvider = useDataProvider<Cancion>({
-//     list: () => CancionService.listCancion(),
-//   });
 
 const [items, setItems] = useState([]);
   useEffect(() => {
     CancionService.listCancion().then(function (data) {
-      //items.values = data;
       setItems(data);
     });
   }, []);
@@ -313,7 +306,6 @@ const [items, setItems] = useState([]);
 const order = (event, columnId) => {
     console.log(event);
     const direction = event.detail.value;
-    // Custom logic based on the sorting direction
     console.log(`Sort direction changed for column ${columnId} to ${direction}`);
 
     var dir = (direction == 'asc') ? 1 : 2;
@@ -322,7 +314,6 @@ const order = (event, columnId) => {
     });
   }
 
-  //BUSQUEDABINARIA
   const criterio = useSignal('');
   const texto = useSignal('');
   const itemSelect = [
@@ -435,7 +426,7 @@ const searchBynary = async () => {
           <Icon slot="prefix" icon="vaadin:search" />
         </TextField>
         {/* <Button onClick={searchLineal} theme="primary">
-          BUSCAR BINARIO LINEAL
+          BUSCAR BL
         </Button> */}
         <Button onClick={search} theme="primary">
           BUSCAR
