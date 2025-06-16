@@ -87,15 +87,12 @@ public class DaoCancion extends AdapterDao<Cancion> {
 
 
     private int partition(Cancion arr[], int begin, int end, Integer type) {
-        // hashmap //clave - valor
-        // Calendar cd = Calendar.getInstance();
 
         Cancion pivot = arr[end];
         int i = (begin - 1);
         if (type == Utiles.ASCEDENTE) {
             for (int j = begin; j < end; j++) {
                 if (arr[j].getNombre().toLowerCase().compareTo(pivot.getNombre().toLowerCase()) < 0) {
-                    // if (arr[j] <= pivot) {
                     i++;
                     Cancion swapTemp = arr[i];
                     arr[i] = arr[j];
@@ -105,7 +102,6 @@ public class DaoCancion extends AdapterDao<Cancion> {
         } else {
             for (int j = begin; j < end; j++) {
                 if (arr[j].getNombre().toLowerCase().compareTo(pivot.getNombre().toLowerCase()) > 0) {
-                    // if (arr[j] <= pivot) {
                     i++;
                     Cancion swapTemp = arr[i];
                     arr[i] = arr[j];
@@ -153,15 +149,12 @@ public class DaoCancion extends AdapterDao<Cancion> {
     }
 
     private int partition2(Cancion arr[], int begin, int end, Integer type) {
-        // hashmap //clave - valor
-        // Calendar cd = Calendar.getInstance();
 
         Cancion pivot = arr[end];
         int i = (begin - 1);
         if (type == Utiles.ASCEDENTE) {
             for (int j = begin; j < end; j++) {
                 if (arr[j].getUrl().toLowerCase().compareTo(pivot.getUrl().toLowerCase()) < 0) {
-                    // if (arr[j] <= pivot) {
                     i++;
                     Cancion swapTemp = arr[i];
                     arr[i] = arr[j];
@@ -171,7 +164,6 @@ public class DaoCancion extends AdapterDao<Cancion> {
         } else {
             for (int j = begin; j < end; j++) {
                 if (arr[j].getUrl().toLowerCase().compareTo(pivot.getUrl().toLowerCase()) > 0) {
-                    // if (arr[j] <= pivot) {
                     i++;
                     Cancion swapTemp = arr[i];
                     arr[i] = arr[j];
@@ -208,15 +200,12 @@ public class DaoCancion extends AdapterDao<Cancion> {
     }
 
     private int partition3(Cancion arr[], int begin, int end, Integer type) {
-        // hashmap //clave - valor
-        // Calendar cd = Calendar.getInstance();
 
         Cancion pivot = arr[end];
         int i = (begin - 1);
         if (type == Utiles.ASCEDENTE) {
             for (int j = begin; j < end; j++) {
                 if (arr[j].getDuracion()< pivot.getDuracion()) {
-                    // if (arr[j] <= pivot) {
                     i++;
                     Cancion swapTemp = arr[i];
                     arr[i] = arr[j];
@@ -226,7 +215,6 @@ public class DaoCancion extends AdapterDao<Cancion> {
         } else {
             for (int j = begin; j < end; j++) {
                 if (arr[j].getDuracion()> pivot.getDuracion())  {
-                    // if (arr[j] <= pivot) {
                     i++;
                     Cancion swapTemp = arr[i];
                     arr[i] = arr[j];
@@ -263,8 +251,6 @@ public class DaoCancion extends AdapterDao<Cancion> {
     }
 
     private int partition4(Cancion arr[], int begin, int end, Integer type) {
-        // hashmap //clave - valor
-        // Calendar cd = Calendar.getInstance();
 
         Cancion pivot = arr[end];
         int i = (begin - 1);
@@ -281,7 +267,6 @@ public class DaoCancion extends AdapterDao<Cancion> {
         } else {
             for (int j = begin; j < end; j++) {
                 if (arr[j].getTipo().toString().toLowerCase().compareTo(pivot.getTipo().toString().toLowerCase()) > 0)  {
-                    // if (arr[j] <= pivot) {
                     i++;
                     Cancion swapTemp = arr[i];
                     arr[i] = arr[j];
@@ -318,22 +303,19 @@ public class DaoCancion extends AdapterDao<Cancion> {
 }
 
     private int partition5(Cancion arr[], int begin, int end, Integer type) throws Exception {
-        // hashmap //clave - valor
-        // Calendar cd = Calendar.getInstance();
         DaoGenero daoGenero = new DaoGenero();
         Cancion pivot = arr[end];
         int i = (begin - 1);
         if (type == Utiles.ASCEDENTE) {
             for (int j = begin; j < end; j++) {
                 if (daoGenero.get(arr[j].getId_genero()).getNombre().toLowerCase().compareTo(daoGenero.get(pivot.getId_genero()).getNombre().toLowerCase()) < 0) {
-                    // if (arr[j] <= pivot) {
                     i++;
                     Cancion swapTemp = arr[i];
                     arr[i] = arr[j];
                     arr[j] = swapTemp;
                 }
             }
-        } else { //aux.put("genero",da.get(arreglo.getId_genero()).getNombre());
+        } else { 
             for (int j = begin; j < end; j++) {
                 if (daoGenero.get(arr[j].getId_genero()).getNombre().toLowerCase().compareTo(daoGenero.get(pivot.getId_genero()).getNombre().toLowerCase()) > 0)  {
                     // if (arr[j] <= pivot) {
@@ -373,25 +355,22 @@ public class DaoCancion extends AdapterDao<Cancion> {
     }
 
     private int partition6(Cancion arr[], int begin, int end, Integer type) throws Exception {
-        // hashmap //clave - valor
-        // Calendar cd = Calendar.getInstance();
+
         DaoAlbum daoAlbum = new DaoAlbum();
         Cancion pivot = arr[end];
         int i = (begin - 1);
         if (type == Utiles.ASCEDENTE) {
             for (int j = begin; j < end; j++) {
                 if (daoAlbum.get(arr[j].getId_album()).getNombre().toLowerCase().compareTo(daoAlbum.get(pivot.getId_album()).getNombre().toLowerCase()) < 0) {
-                    // if (arr[j] <= pivot) {
                     i++;
                     Cancion swapTemp = arr[i];
                     arr[i] = arr[j];
                     arr[j] = swapTemp;
                 }
             }
-        } else { //aux.put("genero",da.get(arreglo.getId_genero()).getNombre());
+        } else { 
             for (int j = begin; j < end; j++) {
                 if (daoAlbum.get(arr[j].getId_album()).getNombre().toLowerCase().compareTo(daoAlbum.get(pivot.getId_album()).getNombre().toLowerCase()) > 0)  {
-                    // if (arr[j] <= pivot) {
                     i++;
                     Cancion swapTemp = arr[i];
                     arr[i] = arr[j];
@@ -414,9 +393,7 @@ public class DaoCancion extends AdapterDao<Cancion> {
             quickSort6(arr, partitionIndex + 1, end, type);
         }
     }
-
-
-    //BUSQUEDA BINARIA
+   //BUSQUEDA BINARIA
     public LinkedList<HashMap<String, String>> search(String attribute, String text, Integer type) throws Exception {
         LinkedList<HashMap<String, String>> lista = all(listAll());
         LinkedList<HashMap<String, String>> resp = new LinkedList<>();
@@ -450,7 +427,6 @@ public class DaoCancion extends AdapterDao<Cancion> {
                         if (m.get(attribute).toString().toLowerCase().contains(text.toLowerCase())) {
                             resp.add(m);
                         }
-//                        System.out.println("llego aqui?3 "+m.get(attribute));
                     }
                     break;
             }
@@ -461,8 +437,6 @@ public class DaoCancion extends AdapterDao<Cancion> {
 //ORDENAMIENTO PARA LA BUSQUEDA
 
     private int partition7(HashMap<String, String>  arr[], int begin, int end, Integer type, String attribute) {
-        // hashmap //clave - valor
-        // Calendar cd = Calendar.getInstance();
 
         HashMap<String, String> pivot = arr[end];
         int i = (begin - 1);
@@ -470,7 +444,6 @@ public class DaoCancion extends AdapterDao<Cancion> {
             for (int j = begin; j < end; j++) {
                 if (arr[j].get(attribute).toString().toLowerCase()
                         .compareTo(pivot.get(attribute).toString().toLowerCase()) < 0) {
-                    // if (arr[j] <= pivot) {
                     i++;
                     HashMap<String, String> swapTemp = arr[i];
                     arr[i] = arr[j];
@@ -481,7 +454,6 @@ public class DaoCancion extends AdapterDao<Cancion> {
             for (int j = begin; j < end; j++) {
                 if (arr[j].get(attribute).toString().toLowerCase()
                         .compareTo(pivot.get(attribute).toString().toLowerCase()) > 0) {
-                    // if (arr[j] <= pivot) {
                     i++;
                     HashMap<String, String> swapTemp = arr[i];
                     arr[i] = arr[j];
