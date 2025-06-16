@@ -1,6 +1,6 @@
 package org.unl.music.base.controller.dao.dao_models;
 
-
+import org.unl.music.base.controller.dao.AdapterDao;
 import org.unl.music.base.models.Genero;
 
 

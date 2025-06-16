@@ -1,14 +1,15 @@
 import { ViewConfig } from '@vaadin/hilla-file-router/types.js';
-import { Button, DatePicker, Dialog, Grid, GridColumn, GridItemModel, TextArea, TextField, VerticalLayout } from '@vaadin/react-components';
+import {Button,ComboBox,Dialog,Grid,GridColumn,GridItemModel,TextField,VerticalLayout}
+from '@vaadin/react-components';
 import { Notification } from '@vaadin/react-components/Notification';
-
+import { BandaService } from 'Frontend/generated/endpoints';
 import { useSignal } from '@vaadin/hilla-react-signals';
 import handleError from 'Frontend/views/_ErrorHandler';
 import { Group, ViewToolbar } from 'Frontend/components/ViewToolbar';
-
+import { DatePicker } from '@vaadin/react-components';
 import { useDataProvider } from '@vaadin/hilla-react-crud';
 import Banda from 'Frontend/generated/org/unl/music/base/models/Banda';
-import { BandaService } from 'Frontend/generated/endpoints';
+import { useEffect } from 'react';
 
 export const config: ViewConfig = {
   title: 'Banda',
@@ -24,12 +25,8 @@ type BandaEntryFormProps = {
 };
 
 type BandaEntryFormUpdateProps =  {
+  arguments: any;
   onBandaUpdated?: () => void;
-  arguments: {
-    nombre: string;
-    fecha: string;
-    ident: string | number;
-  };
 };
 //BANDA CREATE
 function BandaEntryForm(props: BandaEntryFormProps) {
@@ -60,7 +57,7 @@ function BandaEntryForm(props: BandaEntryFormProps) {
         } else {
           Notification.show('No se pudo crear, faltan datos', { duration: 5000, position: 'top-center', theme: 'error' });
         }
-  
+
       } catch (error) {
         console.log(error);
         handleError(error);
@@ -142,13 +139,13 @@ function BandaEntryFormUpdate(props: BandaEntryFormUpdateProps) {
 
   const nombre = useSignal(props.arguments.nombre);
   const fecha = useSignal(props.arguments.fecha);
-  const ident = useSignal(props.arguments.ident);
-  
+  const ident = useSignal(props.arguments.id);
+
   const updateBanda = async () => {
       try {
         if (nombre.value.trim().length > 0 && fecha.value.trim().length > 0) {
-          console.log(parseInt(String(ident.value)) + " *********");
-          await BandaService.updateBanda(parseInt(String(ident.value)), nombre.value, fecha.value);
+          console.log(parseInt(ident.value)+" *********");
+          await BandaService.updateBanda(parseInt(ident.value), nombre.value, fecha.value);
           if (props.onBandaUpdated) {
             props.onBandaUpdated();
           }
@@ -159,7 +156,7 @@ function BandaEntryFormUpdate(props: BandaEntryFormUpdateProps) {
         } else {
           Notification.show('No se pudo crear, faltan datos', { duration: 5000, position: 'top-center', theme: 'error' });
         }
-  
+
       } catch (error) {
         console.log(error);
         handleError(error);
@@ -243,20 +240,16 @@ function index({ model }: { model: GridItemModel<Banda> }) {
 
 export default function BandaListView() {
   const dataProvider = useDataProvider<Banda>({
-    list: async () => (await BandaService.listAllBanda() ?? []).filter((b): b is Banda => b !== undefined),
+    list: async () => {
+      const result = await BandaService.listAllBanda();
+      return (result ?? []).filter((banda): banda is Banda => banda !== undefined);
+    },
   });
 
-function link({ item }: { item: Banda }) {
+  function link({ item }: { item: Banda }) {
   return (
     <span>
-      <BandaEntryFormUpdate
-        arguments={{
-          nombre: item.nombre ?? '',
-          fecha: item.fecha ?? '',
-          ident: item.id as string | number // Use the unique identifier property from Banda
-        }}
-        onBandaUpdated={dataProvider.refresh}
-      />
+      <BandaEntryFormUpdate arguments={item}  onBandaUpdated={dataProvider.refresh}/>
     </span>
   );
 }
@@ -272,7 +265,7 @@ function link({ item }: { item: Banda }) {
         <GridColumn header="Nro" renderer={index} />
         <GridColumn path="nombre" header="Nombre del artista" />
         <GridColumn path="fecha" header="Fecha">
-          {({ item }) => (item.dueDate ? dateFormatter.format(new Date(item.dueDate)) : 'Never')}
+          {({ item }) => (item.fecha ? dateFormatter.format(new Date(item.fecha)) : 'Never')}
         </GridColumn>
         <GridColumn header="Acciones" renderer={link} />
       </Grid>

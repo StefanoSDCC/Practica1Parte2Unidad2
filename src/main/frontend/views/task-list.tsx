@@ -38,7 +38,7 @@ function TaskEntryForm(props: TaskEntryFormProps) {
       if (
         description.value.trim().length > 0 &&
         dueDate.value !== undefined &&
-        (dueDate.value ?? '').trim().length > 0
+        dueDate.value.trim().length > 0
       ) {
         await TaskService.createTask(description.value, dueDate.value);
         if (props.onTaskCreated) {

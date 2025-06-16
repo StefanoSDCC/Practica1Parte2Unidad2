@@ -25,22 +25,24 @@ type ArtistaEntryFormProps = {
 };
 
 type ArtistaEntryFormPropsUpdate = {
-  artista: Artista;
+  item: Artista;
   onArtistaUpdated?: () => void;
 };
 //GUARDAR ARTISTA
 function ArtistaEntryForm(props: ArtistaEntryFormProps) {
   const nombre = useSignal('');
   const nacionalidad = useSignal('');
+  const roll = useSignal('');
   const createArtista = async () => {
     try {
       if (nombre.value.trim().length > 0 && nacionalidad.value.trim().length > 0) {
-        await ArtistaService.createArtista(nombre.value, nacionalidad.value);
+        await ArtistaService.createArtista(nombre.value, nacionalidad.value, roll.value);
         if (props.onArtistaCreated) {
           props.onArtistaCreated();
         }
         nombre.value = '';
         nacionalidad.value = '';
+        roll.value = '';
         dialogOpened.value = false;
         Notification.show('Artista creado', { duration: 5000, position: 'bottom-end', theme: 'success' });
       } else {
@@ -52,13 +54,20 @@ function ArtistaEntryForm(props: ArtistaEntryFormProps) {
       handleError(error);
     }
   };
-  
-  let pais = useSignal<string[]>([]);
+
+  let pais = useSignal<(string | undefined)[]>([]);
   useEffect(() => {
     ArtistaService.listCountry().then(data =>
-      pais.value = (data ?? []).filter((item): item is string => typeof item === 'string')
+      pais.value = data ?? []
     );
   }, []);
+  let listaArtista = useSignal<String[]>([]);
+    useEffect(() => {
+      ArtistaService.listRolArtista().then(data =>
+        //console.log(data)
+        listaArtista.value = (data ?? []).filter((item): item is string => typeof item === 'string')
+      );
+    }, []);
   const dialogOpened = useSignal(false);
   return (
     <>
@@ -81,24 +90,31 @@ function ArtistaEntryForm(props: ArtistaEntryFormProps) {
             <Button onClick={createArtista} theme="primary">
               Registrar
             </Button>
-            
+
           </>
         }
       >
         <VerticalLayout style={{ alignItems: 'stretch', width: '18rem', maxWidth: '100%' }}>
-          <TextField label="Nombre del artista" 
+          <TextField label="Nombre del artista"
             placeholder="Ingrese el nombre del artista"
             aria-label="Nombre del artista"
             value={nombre.value}
             onValueChanged={(evt) => (nombre.value = evt.detail.value)}
           />
-          <ComboBox label="Nacionalidad" 
+          <ComboBox label="Nacionalidad"
             items={pais.value}
             placeholder='Seleccione un pais'
             aria-label='Seleccione un pais de la lista'
             value={nacionalidad.value}
             onValueChanged={(evt) => (nacionalidad.value = evt.detail.value)}
-          />
+            />
+            <ComboBox label="Roll"
+            items={listaArtista.value}
+            placeholder='Seleccione un tipo de archivo'
+            aria-label='Seleccione un tipo de archivo de la lista'
+            value={roll.value}
+            onValueChanged={(evt) => (roll.value = evt.detail.value)}
+            />
         </VerticalLayout>
       </Dialog>
       <Button
@@ -119,17 +135,17 @@ const ArtistaEntryFormUpdate = function(props: ArtistaEntryFormPropsUpdate) {
       pais.value = (data ?? []).filter((item): item is string => typeof item === 'string')
     );
   }, []);
-  const nombre = useSignal(props.artista.nombres ?? '');
-  const nacionidad = useSignal(props.artista.nacionidad ?? '');
+  const nombre = useSignal(props.item.nombres);
+  const nacionalidad = useSignal(props.item.nacionidad);
   const createArtista = async () => {
     try {
-      if (nombre.value.trim().length > 0 && nacionidad.value.trim().length > 0) {
-        await ArtistaService.aupdateArtista(props.artista.id, nombre.value, nacionidad.value);
+      if ((nombre.value ?? '').trim().length > 0 && (nacionalidad.value ?? '').trim().length > 0) {
+        await ArtistaService.aupdateArtista(props.item.id, nombre.value ?? '', nacionalidad.value ?? '', props.item.roll);
         if (props.onArtistaUpdated) {
           props.onArtistaUpdated();
         }
         nombre.value = '';
-        nacionidad.value = '';
+        nacionalidad.value = '';
         dialogOpened.value = false;
         Notification.show('Artista actualizado', { duration: 5000, position: 'bottom-end', theme: 'success' });
       } else {
@@ -162,24 +178,25 @@ const ArtistaEntryFormUpdate = function(props: ArtistaEntryFormPropsUpdate) {
               Cancelar
             </Button>
             <Button onClick={createArtista} theme="primary">
-              Actualizar
+              Registrar
             </Button>
           </>
         }
       >
         <VerticalLayout style={{ alignItems: 'stretch', width: '18rem', maxWidth: '100%' }}>
-          <TextField label="Nombre del artista" 
+          <TextField label="Nombre del artista"
             placeholder="Ingrese el nombre del artista"
             aria-label="Nombre del artista"
             value={nombre.value}
             onValueChanged={(evt) => (nombre.value = evt.detail.value)}
           />
-          <ComboBox label="Nacionalidad" 
+          <ComboBox label="Nacionalidad"
             items={pais.value}
             placeholder='Seleccione un pais'
             aria-label='Seleccione un pais de la lista'
-            value={nacionidad.value}
-            onValueChanged={(evt) => (nacionidad.value = evt.detail.value)}
+            value={nacionalidad.value}
+            defaultValue={nacionalidad.value}
+            onValueChanged={(evt) => (nacionalidad.value = evt.detail.value)}
           />
         </VerticalLayout>
       </Dialog>
@@ -188,7 +205,7 @@ const ArtistaEntryFormUpdate = function(props: ArtistaEntryFormPropsUpdate) {
           dialogOpened.value = true;
         }}
       >
-        Editar  
+        Editar
       </Button>
     </>
   );
@@ -198,18 +215,15 @@ const ArtistaEntryFormUpdate = function(props: ArtistaEntryFormPropsUpdate) {
 
 //LISTA DE ARTISTAS
 export default function ArtistaView() {
-  
+
   const dataProvider = useDataProvider<Artista>({
-    list: async () => {
-      const result = await ArtistaService.listAll();
-      return (result ?? []).filter((item): item is Artista => item !== undefined);
-    },
+    list: async () => (await ArtistaService.listAll() ?? []).filter((item): item is Artista => item !== undefined),
   });
 
   function indexLink({ item }: { item: Artista }) {
     return (
       <span>
-        <ArtistaEntryFormUpdate artista={item} onArtistaUpdated={dataProvider.refresh} />
+        <ArtistaEntryFormUpdate item={item} onArtistaUpdated={dataProvider.refresh} />
       </span>
     );
   }
@@ -224,14 +238,9 @@ export default function ArtistaView() {
         </Group>
       </ViewToolbar>
       <Grid dataProvider={dataProvider.dataProvider}>
-        <GridColumn
-          header="Nro"
-          renderer={({ model }) => <span>{model.index + 1}</span>}
-        />
         <GridColumn path="nombres" header="Nombre del artista" />
-        <GridColumn path="nacionidad" header="Nacionidad">
-
-        </GridColumn>
+        <GridColumn path="nacionidad" header="Nacionidad"></GridColumn>
+        <GridColumn path="roll" header="Roll" />
         <GridColumn header="Acciones" renderer={indexLink}/>
       </Grid>
     </main>

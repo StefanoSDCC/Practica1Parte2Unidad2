@@ -65,4 +65,9 @@ public class Cancion {
         this.tipo = tipo;
     }
 
+    public Object getAlbum() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getAlbum'");
+    }
+
 }

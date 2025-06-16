@@ -1,19 +1,13 @@
-package org.unl.music.base.controller.service;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-
-import org.unl.music.base.controller.dao.dao_models.DaoBanda;
-import org.unl.music.base.models.Banda;
+package org.unl.music.base.service;
 
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.hilla.BrowserCallable;
-
 import io.micrometer.common.lang.NonNull;
 import jakarta.validation.constraints.NotEmpty;
+import org.unl.music.base.controller.dao.dao_models.DaoBanda;
+import org.unl.music.base.models.Banda;
+
+import java.util.*;
 
 @BrowserCallable
 @AnonymousAllowed
@@ -46,14 +40,15 @@ public class BandaService {
         return Arrays.asList(db.listAll().toArray());
     }
 
-    public List<HashMap<String, String>> listBanda(){
-        List<HashMap<String, String>> lista = new ArrayList<>();
+    public List<HashMap> listBanda(){
+        List<HashMap> lista = new ArrayList<>();
         if(!db.listAll().isEmpty()) {
             Banda [] arreglo = db.listAll().toArray();
+           
             for(int i = 0; i < arreglo.length; i++) {
                 
                 HashMap<String, String> aux = new HashMap<>();
-                aux.put("id", Integer.toString(arreglo[i].getId()));                
+                aux.put("id", arreglo[i].getId().toString(i));
                 aux.put("nombre", arreglo[i].getNombre());
                 lista.add(aux);
             }

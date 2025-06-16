@@ -4,6 +4,8 @@ import org.unl.music.base.models.Banda;
 
 import java.util.Date;
 
+import org.unl.music.base.controller.dao.AdapterDao;
+
 public class DaoBanda extends AdapterDao<Banda> {
     private Banda obj;
 
@@ -39,9 +41,9 @@ public class DaoBanda extends AdapterDao<Banda> {
             this.update(obj, pos);
             return true;
         } catch (Exception e) {
-            //TODO
+
             return false;
-            // TODO: handle exception
+
         }
     }
 
@@ -58,6 +60,7 @@ public class DaoBanda extends AdapterDao<Banda> {
         da.getObj().setId(da.listAll().getLength() + 1);
         da.getObj().setNombre("Angeles del infierno");
         da.getObj().setFecha(new Date());
+
         if (da.save())
             System.out.println("GUARDADO");
         else

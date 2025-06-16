@@ -7,16 +7,7 @@ public class Album {
     private String nombre;
     private Date fecha;
     private Integer id_banda;
-    private Banda banda; // Add this field if not present
-
-public void setBanda(Banda banda) {
-    this.banda = banda;
-}
-
-public Banda getBanda() {
-    return this.banda;
-}
-
+    private Banda banda;
 
     public Integer getId() {
         return this.id;
@@ -50,4 +41,11 @@ public Banda getBanda() {
         this.id_banda = id_banda;
     }
 
+    public Banda getBanda() {
+        return banda;
+    }
+
+    public void setBanda(Banda banda) {
+        this.banda = banda;
+    }
 }

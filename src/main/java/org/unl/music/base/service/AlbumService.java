@@ -1,4 +1,4 @@
-package org.unl.music.base.controller.service;
+package org.unl.music.base.service;
 
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.hilla.BrowserCallable;
@@ -28,10 +28,9 @@ public class AlbumService {
     private static final Logger log = LogManager.getLogger(AlbumService.class);
     private DaoAlbum da;
 
-    //private DaoBanda db;
     public AlbumService() {
         da = new DaoAlbum();
-        //db = new DaoBanda();
+
     }
 
     public void createAlbum(@NotEmpty String nombre, @NotNull Date fecha, @NotNull Integer id_banda) throws Exception {
@@ -56,7 +55,7 @@ public class AlbumService {
             Integer bandaId = album.getId_banda();
             for (Banda b : bandas) {
                 if (b.getId().equals(bandaId)) {
-                    album.setBanda(b);  // <-- Aquí asignas el objeto Banda
+                    album.setBanda(b);
                     break;
                 }
             }
@@ -64,37 +63,6 @@ public class AlbumService {
 
         return albums;
     }
-
-    public List<HashMap<String, String>> listAllMap(){
-        Album[] al = new DaoAlbum().listAll().toArray();
-        Banda[] bn = new DaoBanda().listAll().toArray();
-        List<HashMap<String, String>> all = new ArrayList<>();
-        if (al != null){
-            for (Album alb : al){
-                Map<String, String> mp = new HashMap<>();
-                mp.put("album", alb.getNombre());
-                mp.put("albuId", alb.getId().toString());
-                //mp.put("albuDate", alb.getFecha().toString());
-                Integer ko = alb.getId_banda();
-                mp.put("Banda", getNombreBanda(ko, bn));
-                all.add((HashMap<String, String>) mp);
-            }
-        }
-        else {
-            System.out.println("Album esta vacio");
-        }
-
-        return all;
-    }
-
-    private String getNombreBanda(Integer ko, Banda [] bn){
-        for (Banda bnb : bn){
-            if (ko != null && ko == bnb.getId()){
-                return bnb.getNombre();
-            }
-        }
-    return null;
-}
 
     public void updateAlbum(@NotNull Integer id, @NotEmpty String nombre, @NotNull Date fecha, @NotNull Integer id_banda) throws Exception {
         log.info("DAtos recibidos{} ", id);
@@ -107,16 +75,7 @@ public class AlbumService {
         da.update(de, pos);
     }
 
-public static void main(String[] args) {
-        AlbumService albumService = new AlbumService();
-
-        for (HashMap<String, String> asss : albumService.listAllMap()) {
-            System.out.println(asss.get("album"));
-        }
-        //AlbumService.listAll();
-    }
 }
-
 
 
 

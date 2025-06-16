@@ -4,6 +4,8 @@ public class Artista {
     private Integer id;
     private String nombres;
     private String nacionidad;
+    private RolArtistaEnum roll;
+
 
     public Integer getId() {
         return this.id;
@@ -29,4 +31,11 @@ public class Artista {
         this.nacionidad = nacionidad;
     }
 
+    public RolArtistaEnum getRoll() {
+        return this.roll;
+    }
+
+    public void setRoll(RolArtistaEnum roll) {
+        this.roll = roll;
+    }
 }

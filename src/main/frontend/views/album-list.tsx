@@ -33,43 +33,28 @@ type AlbumEntryFormProps = {
 function AlbumEntryForm(props: AlbumEntryFormProps) {
   const nombre = useSignal('');
   const fecha = useSignal('');
-  const bandaId = useSignal<number | null>(null); // 🔄 CAMBIO: Banda
+  const bandaId = useSignal<number | null>(null);
 
   const dialogOpened = useSignal(false);
-  const [bandas, setBandas] = useState<BandaInfo[]>([]); // 🔄 CAMBIO: Banda
+  const [bandas, setBandas] = useState<BandaInfo[]>([]);
 
   useEffect(() => {
-    // 🔄 CAMBIO: Banda - cargar bandas al abrir formulario
+
     const cargarBandas = async () => {
       const lista = await BandaService.listBanda();
-      setBandas(
-        (lista ?? [])
-          .filter((item): item is Record<string, string | undefined> => !!item && typeof item === 'object')
-          .map(item => ({
-            id: String(item.id ?? ''),
-            nombre: String(item.nombre ?? ''),
-          }))
-      );
+      setBandas(Array.isArray(lista) ? lista.filter((b): b is BandaInfo => !!b && typeof b.id === 'string' && typeof b.nombre === 'string') : []);
     };
     cargarBandas();
   }, []);
 
   const createAlbum = async () => {
     try {
-      if (
-        nombre.value.trim().length > 0 &&
-        fecha.value.trim().length > 0 &&
-        bandaId.value !== null // 🔄 CAMBIO: Banda
-      ) {
-        await AlbumService.createAlbum(
-          nombre.value,
-          fecha.value,
-          bandaId.value // 🔄 CAMBIO: Banda
-        );
+      if (nombre.value.trim().length > 0 &&fecha.value.trim().length > 0 && bandaId.value !== null )
+      { await AlbumService.createAlbum( nombre.value, fecha.value, bandaId.value);
         props.onAlbumCreated?.();
         nombre.value = '';
         fecha.value = '';
-        bandaId.value = null; // 🔄 CAMBIO: Banda
+        bandaId.value = null;
         dialogOpened.value = false;
         Notification.show('Album creado', {
           duration: 5000,
@@ -125,7 +110,7 @@ function AlbumEntryForm(props: AlbumEntryFormProps) {
             onValueChanged={(evt) => (fecha.value = evt.detail.value)}
           />
 
-          {/* 🔄 CAMBIO: Banda - ComboBox para elegir banda */}
+
           <ComboBox
             label="Banda"
             items={bandas}
@@ -151,7 +136,7 @@ export default function AlbumView() {
   const dataProvider = useDataProvider<Album>({
     list: async () => {
       const result = await AlbumService.listAll();
-      return (result ?? []).filter((item): item is Album => !!item);
+      return (result ?? []).filter((album): album is Album => album !== undefined);
     },
   });
 
@@ -160,10 +145,14 @@ export default function AlbumView() {
     const cargarBandas = async () => {
       const lista = await BandaService.listBanda();
       const map = new Map<number, string>();
-      if (lista) {
+      if (Array.isArray(lista)) {
         for (const item of lista) {
-          if (item !== undefined) {
-            map.set(Number(item.id), item.nombre ?? '');
+          if (
+            item !== undefined &&
+            typeof item.id === 'string' &&
+            typeof item.nombre === 'string'
+          ) {
+            map.set(Number(item.id), item.nombre);
           }
         }
       }
@@ -180,17 +169,8 @@ export default function AlbumView() {
     if (!album) return;
 
     try {
-      if (
-        (album.nombre ?? '').trim().length > 0 &&
-        (album.fecha ?? '').trim().length > 0 &&
-        album.id_banda != null // 🔄 CAMBIO: Banda
-      ) {
-        await AlbumService.updateAlbum(
-          album.id,
-          album.nombre,
-          album.fecha,
-          album.id_banda // 🔄 CAMBIO: Banda
-        );
+      if ((album.nombre?.trim().length ?? 0) > 0 && (album.fecha?.trim().length ?? 0) > 0 && album.id_banda != null )
+      { await AlbumService.updateAlbum(album.id, album.nombre, album.fecha, album.id_banda);
         albumEditando.value = null;
         dataProvider.refresh();
         Notification.show('Album actualizado', {
@@ -279,7 +259,6 @@ export default function AlbumView() {
               }
             />
 
-            {/* 🔄 CAMBIO: Banda - ComboBox para editar banda */}
             <ComboBox
               label="Banda"
               items={Array.from(bandasMap.entries()).map(([id, nombre]) => ({

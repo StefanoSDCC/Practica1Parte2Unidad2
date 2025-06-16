@@ -2,11 +2,20 @@ package org.unl.music.base.controller.dao.dao_models;
 
 import org.unl.music.base.models.Artista;
 
+import org.unl.music.base.controller.dao.AdapterDao;
+import org.unl.music.base.models.Banda;
+import org.unl.music.base.models.RolArtistaEnum;
+
+import java.util.Date;
+import java.util.HashMap;
+
 public class DaoArtista extends AdapterDao<Artista> {
     private Artista obj;
 
+
     public DaoArtista() {
         super(Artista.class);
+        //obje = new Banda();
         // TODO Auto-generated constructor stub
     }
 
@@ -22,7 +31,7 @@ public class DaoArtista extends AdapterDao<Artista> {
 
     public Boolean save() {
         try {
-            obj.setId(listAll().getLength()+1);
+            obj.setId(listAll().getLength() + 1);
             this.persist(obj);
             return true;
         } catch (Exception e) {
@@ -43,23 +52,16 @@ public class DaoArtista extends AdapterDao<Artista> {
         }
     }
 
-    public static void main(String[] args) {
-        DaoArtista da = new DaoArtista();
-        da.getObj().setId(da.listAll().getLength() + 1);
-        da.getObj().setNacionidad("Ecuatoriana");
-        da.getObj().setNombres("Isauro Rivera");
-        if (da.save())
-            System.out.println("GUARDADO");
-        else
-            System.out.println("Hubo un error");
-        da.setObj(null);
-        da.getObj().setId(da.listAll().getLength() + 1);
-        da.getObj().setNacionidad("Ecuatoriana");
-        da.getObj().setNombres("Pool Ochao");
-        if (da.save())
-            System.out.println("GUARDADO");
-        else
-            System.out.println("Hubo un error");
+    public Boolean updateId(Integer id) {
+        try {
+            this.update(obj, id);
+            return true;
+        } catch (Exception e) {
+            //TODO
+            return false;
+            // TODO: handle exception
+        }
     }
-
 }
+
+

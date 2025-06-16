@@ -1,4 +1,4 @@
-package org.unl.music.base.controller.dao.dao_models;
+package org.unl.music.base.controller.dao;
 
 import org.unl.music.base.controller.data_struct.list.LinkedList;
 

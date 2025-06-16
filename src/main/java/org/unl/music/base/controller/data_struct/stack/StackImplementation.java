@@ -14,7 +14,7 @@ public class StackImplementation<E> extends LinkedList<E> {
     }
 
     protected Boolean isFullStack() {
-        return getLength() >  this.top ;
+        return getLength() > this.top;
     }
 
     protected void push(E info) throws Exception {

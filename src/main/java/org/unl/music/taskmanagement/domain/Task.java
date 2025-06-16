@@ -61,3 +61,5 @@ public class Task extends AbstractEntity<Long> {
         this.dueDate = dueDate;
     }
 }
+
+

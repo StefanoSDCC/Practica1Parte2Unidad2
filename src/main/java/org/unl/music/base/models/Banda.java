@@ -46,5 +46,5 @@ public class Banda {
         diccionario.put("nombre", this.getNombre());
         return diccionario;
     }
-    
+
 }

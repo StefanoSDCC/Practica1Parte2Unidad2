@@ -1,4 +1,4 @@
-package org.unl.music.base.controller.dao.dao_models;
+package org.unl.music.base.controller.dao;
 
 import java.io.File;
 import java.io.FileReader;
@@ -54,8 +54,8 @@ public class AdapterDao <T> implements InterfaceDao<T> {
         //throw new UnsupportedOperationException("Unimplemented method 'listAll'");
         LinkedList<T> lista = new LinkedList<>();
         try {
-            String data = readFile();
-            T[] m = g.fromJson(data, (java.lang.reflect.Type) java.lang.reflect.Array.newInstance(clazz, 0).getClass());
+            String data = readFile();            
+            T[] m = (T[]) g.fromJson(data, java.lang.reflect.Array.newInstance(clazz, 0).getClass());            
             lista.toList(m);
             
         } catch (Exception e) {
